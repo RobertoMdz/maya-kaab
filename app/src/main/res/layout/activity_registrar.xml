@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".views.RegistrarActivity">
+
+    <LinearLayout
+        android:id="@+id/linear_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:gravity="center_horizontal"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginBottom="30dp"
+            android:src="@drawable/logo_icon"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/txtinputCorreoLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            app:hintTextAppearance="@style/AppTheme.FloatingLabel">
+
+            <EditText
+                android:id="@+id/edtxtCorreoLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textColor="@color/black"
+                android:hint="Correo"
+                android:inputType="textEmailAddress"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/txtInputPasswordLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/black"
+            android:layout_below="@id/txtinputCorreoLogin"
+            app:passwordToggleEnabled="true"
+            android:layout_marginBottom="20dp"
+            app:passwordToggleTint="@color/primary"
+            app:hintTextAppearance="@style/AppTheme.FloatingLabel">
+
+            <EditText
+                android:id="@+id/edtxtPasswordLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:inputType="textPassword"
+                android:textColor="@color/black"
+                android:hint="Contraseña" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/txtInputCargo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/black"
+            android:layout_marginBottom="20dp"
+            android:layout_below="@id/txtinputCorreoLogin"
+            app:hintTextAppearance="@style/AppTheme.FloatingLabel">
+
+            <EditText
+                android:id="@+id/edtxtCargoLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:inputType="text"
+                android:textColor="@color/black"
+                android:hint="Cargo" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/txtInputTelefono"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/black"
+            android:layout_below="@id/txtinputCorreoLogin"
+            app:hintTextAppearance="@style/AppTheme.FloatingLabel">
+
+            <EditText
+                android:id="@+id/edtxtTelefonoLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:inputType="number"
+                android:textColor="@color/black"
+                android:hint="Telefono" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+        <Button
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="Registrarse"/>
+    </LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".views.TiposDeMielActivity">
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tablayout_tipos_miel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabMinWidth="200dp"
+        app:tabPaddingStart="20dp"
+        android:animateLayoutChanges="true"
+        android:background="@color/primary"
+        app:tabIndicatorColor="@color/white"
+        app:tabSelectedTextColor="@color/white"
+        app:tabTextColor="@color/white"
+        app:tabIndicatorHeight="1dp"
+        app:tabMode="fixed"
+        app:tabTextAppearance="@style/customTextTab">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabMielConvencional"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Miel convencional"/>
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabMielOrganica"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Miel organica"/>
+    </com.google.android.material.tabs.TabLayout>
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tablayout_tipos_miel"
+        android:background="@color/white"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    </androidx.viewpager.widget.ViewPager>
+
+</RelativeLayout>
