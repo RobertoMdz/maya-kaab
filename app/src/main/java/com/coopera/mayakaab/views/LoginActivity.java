@@ -24,6 +24,10 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.coopera.mayakaab.MainActivity;
 import com.coopera.mayakaab.R;
+import com.coopera.mayakaab.models.Constants;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
 
     Button btnLogin;
     EditText edtxtCorreo, edtxtPass;
+    Constants constants = new Constants();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,35 +61,41 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void iniciarSesion(){
-        String urlLogin = "";
-        saveLoginUser();
+         String email = edtxtCorreo.getText().toString();
+         String pass = edtxtPass.getText().toString();
+         ;
+        String urlLogin = constants.URL_BASE+"usuarios.php?action=login&correo="+email+"&password="+pass;
 
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
-
-        /*StringRequest request = new StringRequest(Request.Method.POST, urlLogin, new Response.Listener<String>() {
+        StringRequest request = new StringRequest(Request.Method.POST, urlLogin, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
-                String respuestaLogin = response;
+                String incorrectData = "";
 
+                try{
+                    JSONObject user = new JSONObject(response);
+                    String userId = user.getString("id_usuario");
+                    String userName = user.getString("nombre");
+                    String userRole = user.getString("rol");
+
+                    saveLoginUser(userId, userName, userRole);
+                } catch (JSONException e) {
+                    Toast.makeText(LoginActivity.this, "Los datos son incorrectos", Toast.LENGTH_SHORT).show();
+                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(LoginActivity.this, "Compruba tu conexión a internet", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
             }
 
         }) {
             @Override
             protected Map<String,String> getParams() throws AuthFailureError {
-                String correo = edtxtCorreo.getText().toString();
-                String pass = edtxtPass.getText().toString();
 
                 Map <String,String> dataLogin= new HashMap<>();
 
-                dataLogin.put("username",correo);
+                dataLogin.put("correo",email);
                 dataLogin.put("password",pass);
                 return dataLogin;
             }
@@ -92,16 +103,24 @@ public class LoginActivity extends AppCompatActivity {
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         request.setRetryPolicy(new DefaultRetryPolicy(5000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        requestQueue.add(request);*/
+        requestQueue.add(request);
     }
 
     // guardar inicio de sesion true //
-    private void saveLoginUser() {
+    private void saveLoginUser(String id, String name, String rol) {
+
         SharedPreferences pref = getApplicationContext().getSharedPreferences("myPrefsLogin",MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putBoolean("userLogged", true);
-        editor.putString("email", edtxtCorreo.getText().toString());
+        editor.putString("id", id);
+        editor.putString("name", name);
+        editor.putString("role", rol);
         editor.apply();
+
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+
     }
 
     private TextWatcher loginTextWatcher = new TextWatcher() {

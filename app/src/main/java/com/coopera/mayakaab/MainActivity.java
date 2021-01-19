@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.coopera.mayakaab.views.EnvioTamboresActivity;
 import com.coopera.mayakaab.views.GaleriaActivity;
@@ -27,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
     ImageView imgvGaleria;
     ImageView imgvCerrarSesion;
 
+    TextView cargo;
+    TextView nombre;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +48,10 @@ public class MainActivity extends AppCompatActivity {
          imgvGaleria = findViewById(R.id.imgv_galeria);
          imgvCerrarSesion = findViewById(R.id.imgv_cerrar_sesion);
          imgvGraficas = findViewById(R.id.imgv_graficas);
+         cargo = findViewById(R.id.cargo);
+         nombre = findViewById(R.id.nombre);
+
+         setWelcome();
 
          imgvProductores.setOnClickListener(new View.OnClickListener() {
              @Override
@@ -94,6 +102,23 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void setWelcome() {
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("myPrefsLogin",MODE_PRIVATE);
+        String userName = pref.getString("name","");
+        String userRole = pref.getString("role","");
+
+        if(userRole.equals("1")){
+            cargo.setText("Presidente");
+        } else if (userRole.equals("2")) {
+            cargo.setText("Secretario");
+        } else {
+            cargo.setText("Tesorero");
+        }
+
+        nombre.setText(userName);
+
     }
     // recuperar valor de inicio de sesion //
     private boolean checkUserLoggedBefore() {
