@@ -21,4 +21,10 @@
         android:layout_alignParentRight="true"
         android:src="@drawable/ic_baseline_add_24" />
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
 </RelativeLayout>

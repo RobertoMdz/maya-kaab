@@ -19,8 +19,13 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.coopera.mayakaab.R;
 import com.coopera.mayakaab.adapters.ProductorListAdapter;
+import com.coopera.mayakaab.models.Constants;
 import com.coopera.mayakaab.models.ProductorModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -39,15 +44,7 @@ public class ProductoresActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyler_view_productores);
         fltBtnAgregarProductor = findViewById(R.id.flt_agregar_productor);
-
-        for (int i = 0; i < 10; i++){
-            productoresList.add(new ProductorModel("Pablo Chan Chan", "Señor", "Miel entera", "Miel falt", "9831823749"));
-            productoresList.add(new ProductorModel("Jesus May Chan", "Morelos", "Miel entera", "Miel ", "9831843346"));
-        }
-
-        ProductorListAdapter myadapter = new ProductorListAdapter(ProductoresActivity.this,productoresList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(ProductoresActivity.this));
-        recyclerView.setAdapter(myadapter);
+        progressBar = findViewById(R.id.progressBar);
 
         fltBtnAgregarProductor.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,27 +57,53 @@ public class ProductoresActivity extends AppCompatActivity {
     }
 
     private void obtenerProductores() {
-        String urlGetProductores = "http://10.0.2.2/mayakaab/save-productor.php";
-        onBackPressed();
+        progressBar.setVisibility(View.VISIBLE);
+        String urlGetProductores = Constants.URL_BASE+"productores.php?action=1";
+        //onBackPressed();
 
-        StringRequest request = new StringRequest(Request.Method.GET, urlGetProductores, new Response.Listener<String>() {
+        StringRequest request = new StringRequest(Request.Method.GET, urlGetProductores,
 
-            @Override
-            public void onResponse(String response) {
-                String respuestaLogin = response;
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject respuesta = new JSONObject(response);
+                            JSONArray productores = respuesta.getJSONArray("productores");
 
-            }
+                            for (int i = 0; i < productores.length(); i++) {
+                                JSONObject productor = productores.getJSONObject(i);
+                                String idProductor = productor.getString("id_productor");
+                                String nombreProductor = productor.getString("nombre_productor");
+                                String localidadProductor = productor.getString("localidad_productor");
+                                String telefonoProductor = productor.getString("telefono");
+                                String referenciaProductor = productor.getString("referencia");
+
+                                productoresList.add(new ProductorModel(idProductor, nombreProductor, localidadProductor, telefonoProductor, referenciaProductor));
+                            }
+                            progressBar.setVisibility(View.INVISIBLE);
+
+                            ProductorListAdapter myadapter = new ProductorListAdapter(ProductoresActivity.this,productoresList);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(ProductoresActivity.this));
+                            recyclerView.setAdapter(myadapter);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+
+
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(ProductoresActivity.this, "Compruba tu conexión a internet", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProductoresActivity.this, "Comprueba tu conexión a internet", Toast.LENGTH_SHORT).show();
             }
 
         });
 
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        request.setRetryPolicy(new DefaultRetryPolicy(5000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        requestQueue.add(request);
+        Volley.newRequestQueue(this).add(request);
+
 
     }
 
@@ -89,4 +112,13 @@ public class ProductoresActivity extends AppCompatActivity {
         onBackPressed();
         return false;
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        productoresList.clear();
+        obtenerProductores();
+    }
+
+
 }

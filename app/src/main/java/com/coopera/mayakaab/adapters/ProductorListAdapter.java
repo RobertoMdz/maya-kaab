@@ -13,15 +13,25 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.coopera.mayakaab.R;
+import com.coopera.mayakaab.models.Constants;
 import com.coopera.mayakaab.models.ProductorModel;
 import com.coopera.mayakaab.views.AgregarProductorActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ProductorListAdapter extends RecyclerView.Adapter<ProductorListAdapter.ViewHolder>  {
     private Context mContext;
@@ -82,17 +92,46 @@ public class ProductorListAdapter extends RecyclerView.Adapter<ProductorListAdap
                     @Override
                     public void onClick(View v) {
 
-                        dialog.dismiss();
-                        mData.remove(holder.getLayoutPosition());
-                        notifyItemRemoved(holder.getLayoutPosition());
+                        final String url = Constants.URL_BASE+"productores.php?action=delete";
 
+                        StringRequest putRequest = new StringRequest(Request.Method.POST, url,
+                                new Response.Listener<String>()
+                                {
+                                    @Override
+                                    public void onResponse(String response) {
+                                        dialog.dismiss();
+                                        mData.remove(holder.getLayoutPosition());
+                                        notifyItemRemoved(holder.getLayoutPosition());
+                                    }
+
+                                },
+                                new Response.ErrorListener()
+                                {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        dialog.dismiss();
+                                        Toast.makeText(mContext, "No se pudo eliminar el elemento. Comprueba tu conexion a internet", Toast.LENGTH_SHORT).show();
+
+                                    }
+                                }
+                        ) {
+
+                            @Override
+                            protected Map<String, String> getParams() throws AuthFailureError
+                            {
+                                Map<String, String>  params = new HashMap<String, String>();
+                                params.put("id_productor_eliminar",productor.getId());
+                                return params;
+                            }
+
+                        };
+                        Volley.newRequestQueue(mContext).add(putRequest);
                     }
                 });
 
                 btn_cancelar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
                         dialog.dismiss();
                     }
                 });
@@ -121,4 +160,5 @@ public class ProductorListAdapter extends RecyclerView.Adapter<ProductorListAdap
             btnEliminarProductor = itemView.findViewById(R.id.imgbtnEliminarProductor);
         }
     }
+
 }

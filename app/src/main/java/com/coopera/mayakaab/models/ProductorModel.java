@@ -2,18 +2,25 @@ package com.coopera.mayakaab.models;
 
 public class ProductorModel {
 
+    String id;
     String nombre;
     String comunidad;
-    String mielEntera;
-    String mielFalt;
     String telefono;
+    String referencia;
 
-    public ProductorModel(String nombre, String comunidad, String mielEntera, String mielFalt, String telefono) {
+    public ProductorModel(String id, String nombre, String comunidad, String telefono, String referencia) {
+        this.id = id;
         this.nombre = nombre;
         this.comunidad = comunidad;
-        this.mielEntera = mielEntera;
-        this.mielFalt = mielFalt;
         this.telefono = telefono;
+        this.referencia = referencia;
+    }
+
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getNombre() {
@@ -32,27 +39,19 @@ public class ProductorModel {
         this.comunidad = comunidad;
     }
 
-    public String getMielEntera() {
-        return mielEntera;
-    }
-
-    public void setMielEntera(String mielEntera) {
-        this.mielEntera = mielEntera;
-    }
-
-    public String getMielFalt() {
-        return mielFalt;
-    }
-
-    public void setMielFalt(String mielFalt) {
-        this.mielFalt = mielFalt;
-    }
-
     public String getTelefono() {
         return telefono;
     }
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+
+    public String getReferencia() {
+        return referencia;
+    }
+
+    public void setReferencia(String referencia) {
+        this.referencia = referencia;
     }
 }
