@@ -21,6 +21,8 @@ import com.android.volley.toolbox.Volley;
 import com.coopera.mayakaab.MainActivity;
 import com.coopera.mayakaab.R;
 import com.coopera.mayakaab.models.Constants;
+import com.coopera.mayakaab.models.ProductorModel;
+import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,17 +42,28 @@ public class AgregarProductorActivity extends AppCompatActivity {
                    productorTelefono;
     private String idUsuario;
 
+    Boolean isUpdate = false;
+    ProductorModel productor;
+    Gson gson = new Gson();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agregar_productor);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        isUpdate = getIntent().getBooleanExtra("isUpdate",false);
 
         btnGuardar = findViewById(R.id.btn_guardar_productor);
         edtxtProductorNombre = findViewById(R.id.edtxt_productor_nombre);
         edtxtProductorComunidad = findViewById(R.id.edtxt_productor_comunidad);
         edtxtProductorTelefono = findViewById(R.id.edtxt_productor_telefono);
         edtxtProductorReferencia = findViewById(R.id.edtxt_productor_referencia);
+
+        if(isUpdate) {
+            btnGuardar.setText("Actualizar");
+            productor = gson.fromJson(getIntent().getStringExtra("productor"), ProductorModel.class);
+            setInitialFormState(productor);
+        }
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("myPrefsLogin",MODE_PRIVATE);
         idUsuario = pref.getString("id","");
@@ -64,6 +77,14 @@ public class AgregarProductorActivity extends AppCompatActivity {
         });
     }
 
+    private void setInitialFormState(ProductorModel productor) {
+        edtxtProductorNombre.setText(productor.getNombre());
+        edtxtProductorComunidad.setText(productor.getComunidad());
+        edtxtProductorTelefono.setText(productor.getTelefono());
+        edtxtProductorReferencia.setText(productor.getReferencia());
+
+    }
+
     private void validarFormulario() {
         productorNombre = edtxtProductorNombre.getText().toString().trim();
         productorComunidad = edtxtProductorComunidad.getText().toString().trim();
@@ -74,7 +95,11 @@ public class AgregarProductorActivity extends AppCompatActivity {
             // Lanzar mensaje
             Toast.makeText(AgregarProductorActivity.this, "Todos los campos son requeridos", Toast.LENGTH_LONG).show();
         } else {
-            guardarDatosFormulario();
+            if (isUpdate) {
+                actualizarDatosFormulario();
+            } else {
+                guardarDatosFormulario();
+            }
         }
     }
 
@@ -105,6 +130,41 @@ public class AgregarProductorActivity extends AppCompatActivity {
                 dataProductor.put("telefonoProductor",productorTelefono);
                 dataProductor.put("referenciaProductor",productorReferencia);
                 dataProductor.put("id_usuario", idUsuario);
+
+                return dataProductor;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        request.setRetryPolicy(new DefaultRetryPolicy(5000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        requestQueue.add(request);
+    }
+    private void actualizarDatosFormulario() {
+
+        String url = Constants.URL_BASE+"productores.php?action=update";
+
+        StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                String respuesta = response;
+                Toast.makeText(AgregarProductorActivity.this,"Productor actualizado" , Toast.LENGTH_SHORT).show();
+                onBackPressed();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(AgregarProductorActivity.this, error.toString(), Toast.LENGTH_LONG).show();
+            }
+        }) {
+            @Override
+            protected Map<String,String> getParams() throws AuthFailureError {
+                Map <String,String> dataProductor= new HashMap<>();
+
+                dataProductor.put("nombreProductor",productorNombre);
+                dataProductor.put("localidadProductor",productorComunidad);
+                dataProductor.put("telefonoProductor",productorTelefono);
+                dataProductor.put("referenciaProductor",productorReferencia);
+                dataProductor.put("id_usuario", idUsuario);
+                dataProductor.put("id_productor", productor.getId());
 
                 return dataProductor;
             }

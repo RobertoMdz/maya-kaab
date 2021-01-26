@@ -25,8 +25,9 @@ import java.util.Map;
 public class AgregarMielOrganicaActivity extends AppCompatActivity {
 
     Button agregarMiel;
-    EditText edtxCodigo, edtxFolio, edtxFecha, edtxProductor, edtxHumedad, edtxPrecioBruto,
-            edtxTara, edtxPesoNeto, edxtPrecioUnitario, edtxTotal, edtxTambores;
+
+    EditText edtxnombre, edtxLocalidad, edtxCodigo, edtxFolio, edtxHumedad, edtxPesoBruto,
+            edtxPesoTara, edtxPrecioCompra, edxtKgTotal, edtxTotalPagar, edtxNumeroTambor, edtxMielEntrante, edtxMielFaltante;
     String varCodigo, varFolio, varFecha, varProductor, varHumedad, varPrecioBruto,
             varTara, varPesoNeto, varPrecioUnitario, varTotal, varTambores;
 
@@ -38,17 +39,20 @@ public class AgregarMielOrganicaActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         agregarMiel = findViewById(R.id.btn_guardar_miel_organica);
-        edtxCodigo = findViewById(R.id.edtx_codigoo);
-        edtxFolio = findViewById(R.id.edtx_numero_folioo);
-        edtxFecha = findViewById(R.id.edtx_fechaa);
-        edtxProductor = findViewById(R.id.edtx_nombre_productorr);
-        edtxHumedad = findViewById(R.id.edtx_humedadd);
-        edtxPrecioBruto = findViewById(R.id.edtx_peso_bruto);
-        edtxTara = findViewById(R.id.edtx_taraa);
-        edtxPesoNeto = findViewById(R.id.edtx_peso_netoo);
-        edxtPrecioUnitario = findViewById(R.id.edtx_precio_unitarioo);
-        edtxTotal = findViewById(R.id.edtx_totall);
-        edtxTambores = findViewById(R.id.edtx_numero_tamboress);
+
+        edtxnombre = findViewById(R.id.edtxt_nombre);
+        edtxLocalidad = findViewById(R.id.edtxt_localidad);
+        edtxCodigo = findViewById(R.id.edtxt_codigo);
+        edtxFolio = findViewById(R.id.edtxt_folio);
+        edtxHumedad = findViewById(R.id.edtxt_humedad);
+        edtxPesoBruto = findViewById(R.id.edtxt_bruto);
+        edtxPesoTara = findViewById(R.id.edtxt_tara);
+        edtxPrecioCompra = findViewById(R.id.edtxt_precio_compra);
+        edxtKgTotal = findViewById(R.id.edtxt_kg);
+        edtxTotalPagar = findViewById(R.id.edtxt_total_pagar);
+        edtxNumeroTambor = findViewById(R.id.edtxt_numero_tambor);
+        edtxMielEntrante = findViewById(R.id.edtxt_miel_entrante);
+        edtxMielFaltante = findViewById(R.id.edtxt_miel_faltante);
 
         agregarMiel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,7 +63,7 @@ public class AgregarMielOrganicaActivity extends AppCompatActivity {
 
     }
 
-    private void validarForm() {
+   /* private void validarForm() {
         varCodigo = edtxCodigo.getText().toString().trim();
         varFolio = edtxFolio.getText().toString().trim();
         varFecha = edtxFecha.getText().toString().trim();
@@ -78,7 +82,7 @@ public class AgregarMielOrganicaActivity extends AppCompatActivity {
         } {
             guardarMielOrganica();
         }
-    }
+    }*/
 
     private void guardarMielOrganica(){
         String urlGuardarEnvio = "";

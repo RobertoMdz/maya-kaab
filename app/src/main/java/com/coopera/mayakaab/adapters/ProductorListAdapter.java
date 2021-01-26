@@ -28,14 +28,17 @@ import com.coopera.mayakaab.R;
 import com.coopera.mayakaab.models.Constants;
 import com.coopera.mayakaab.models.ProductorModel;
 import com.coopera.mayakaab.views.AgregarProductorActivity;
+import com.google.gson.Gson;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ProductorListAdapter extends RecyclerView.Adapter<ProductorListAdapter.ViewHolder>  {
+public class ProductorListAdapter extends RecyclerView.Adapter<ProductorListAdapter.ViewHolder> implements Serializable {
     private Context mContext;
     private ArrayList<ProductorModel> mData;
+    Gson gson = new Gson();
 
     public ProductorListAdapter(Context mContext, ArrayList<ProductorModel> mData) {
         this.mContext = mContext;
@@ -61,9 +64,11 @@ public class ProductorListAdapter extends RecyclerView.Adapter<ProductorListAdap
         holder.btnEditarProductor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String jsonProductor = gson.toJson(productor);
+
                 Intent intent = new Intent(mContext, AgregarProductorActivity.class);
-                //intent.putExtra("update","1");
-                //intent.putExtra("id_arbol",productor.getId);
+                intent.putExtra("isUpdate", true);
+                intent.putExtra("productor", jsonProductor);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(intent);
 
