@@ -10,15 +10,25 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.coopera.mayakaab.R;
 import com.coopera.mayakaab.models.ComprasMielModel;
+import com.coopera.mayakaab.models.Constants;
 import com.coopera.mayakaab.views.AgregarMielConvencionalActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ComprasMielListAdapter extends RecyclerView.Adapter<ComprasMielListAdapter.ViewHolder>{
 
@@ -41,10 +51,10 @@ public class ComprasMielListAdapter extends RecyclerView.Adapter<ComprasMielList
 
     @Override
     public void onBindViewHolder(@NonNull ComprasMielListAdapter.ViewHolder holder, int position) {
-        final ComprasMielModel mielConvencional = listItems.get(position);
+        final ComprasMielModel compraMiel = listItems.get(position);
 
-        holder.fechaVenta.setText(mielConvencional.getFechaRegistro());
-        holder.vendedor.setText(mielConvencional.getNombreProductor());
+        holder.fechaVenta.setText(compraMiel.getFechaRegistro());
+        holder.vendedor.setText(compraMiel.getNombreProductor());
 
         holder.btnEditarMielConvencional.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,10 +90,40 @@ public class ComprasMielListAdapter extends RecyclerView.Adapter<ComprasMielList
                     @Override
                     public void onClick(View v) {
 
-                        dialog.dismiss();
-                        listItems.remove(holder.getLayoutPosition());
-                        notifyItemRemoved(holder.getLayoutPosition());
+                        final String url = Constants.URL_BASE+"miel.php?action=delete";
 
+                        StringRequest putRequest = new StringRequest(Request.Method.POST, url,
+                                new Response.Listener<String>()
+                                {
+                                    @Override
+                                    public void onResponse(String response) {
+                                        dialog.dismiss();
+                                        listItems.remove(holder.getLayoutPosition());
+                                        notifyItemRemoved(holder.getLayoutPosition());
+                                    }
+
+                                },
+                                new Response.ErrorListener()
+                                {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        dialog.dismiss();
+                                        Toast.makeText(mContext, "No se pudo eliminar el elemento. Comprueba tu conexion a internet", Toast.LENGTH_SHORT).show();
+
+                                    }
+                                }
+                        ) {
+
+                            @Override
+                            protected Map<String, String> getParams() throws AuthFailureError
+                            {
+                                Map<String, String>  params = new HashMap<String, String>();
+                                params.put("id_miel_eliminar",compraMiel.getIdMiel());
+                                return params;
+                            }
+
+                        };
+                        Volley.newRequestQueue(mContext).add(putRequest);
                     }
                 });
 
