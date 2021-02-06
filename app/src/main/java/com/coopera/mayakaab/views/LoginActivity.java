@@ -12,6 +12,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -37,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     Button btnLogin;
     EditText edtxtCorreo, edtxtPass;
     Constants constants = new Constants();
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btn_login);
         edtxtCorreo = findViewById(R.id.edtxtCorreoLogin);
         edtxtPass = findViewById(R.id.edtxtPasswordLogin);
+        progressBar = findViewById(R.id.progressBar);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,16 +64,16 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void iniciarSesion(){
-         String email = edtxtCorreo.getText().toString();
-         String pass = edtxtPass.getText().toString();
-         ;
+        progressBar.setVisibility(View.VISIBLE);
+        String email = edtxtCorreo.getText().toString();
+        String pass = edtxtPass.getText().toString();
         String urlLogin = constants.URL_BASE+"usuarios.php?action=login&correo="+email+"&password="+pass;
 
         StringRequest request = new StringRequest(Request.Method.POST, urlLogin, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
-                String incorrectData = "";
+                progressBar.setVisibility(View.INVISIBLE);
 
                 try{
                     JSONObject user = new JSONObject(response);

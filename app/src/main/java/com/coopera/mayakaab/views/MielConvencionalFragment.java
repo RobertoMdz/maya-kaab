@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -21,9 +21,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.coopera.mayakaab.R;
-import com.coopera.mayakaab.adapters.MielConvencionalListAdapter;
-import com.coopera.mayakaab.models.MielConvencionalModel;
+import com.coopera.mayakaab.adapters.ComprasMielListAdapter;
+import com.coopera.mayakaab.models.Constants;
+import com.coopera.mayakaab.models.ComprasMielModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -35,25 +40,18 @@ public class MielConvencionalFragment extends Fragment {
 
     RecyclerView recyclerView;
     FloatingActionButton btnAgregar;
-    ArrayList<MielConvencionalModel> mielConvencionalList = new ArrayList<>();
+    ArrayList<ComprasMielModel> mielConvencionalList = new ArrayList<>();
+    ProgressBar progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View vista = inflater.inflate(R.layout.fragment_miel_convencional, container, false);
 
         recyclerView = vista.findViewById(R.id.recycler_miel_convencional);
         btnAgregar = vista.findViewById(R.id.fltbtn_agregar_miel_convencional);
-
-        for (int i = 0; i < 10; i++){
-            mielConvencionalList.add(new MielConvencionalModel("12/Diciembre/2020","Juan Pedro","Señor", "$100","pt","pn","pc","ti","La miel esta buena","$120.50", "$100","Juan Perez"));
-        }
-
-        MielConvencionalListAdapter mielAdapter = new MielConvencionalListAdapter(getContext(),mielConvencionalList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(mielAdapter);
-
+        progressBar = vista.findViewById(R.id.progressBarConvencional);
 
         btnAgregar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,23 +60,45 @@ public class MielConvencionalFragment extends Fragment {
                 startActivity(newIntent);
             }
         });
+
+        obtenerMielConvencional();
         return vista;
 
     }
 
     private void obtenerMielConvencional() {
-        String urlGetList = "";
+        progressBar.setVisibility(View.VISIBLE);
+        String urlGetList =  Constants.URL_BASE + "miel.php?action=tipo-miel&tm=2";
 
         StringRequest request = new StringRequest(Request.Method.GET, urlGetList, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
-                String respuestaLogin = response;
+                try {
+                    JSONObject respuesta = new JSONObject(response);
+                    JSONArray mielConvencionalJsonList = respuesta.getJSONArray("miel-convencional");
 
+                    for (int i = 0; i < mielConvencionalJsonList.length(); i++) {
+                        JSONObject mielConvencional = mielConvencionalJsonList.getJSONObject(i);
+
+                        ComprasMielModel mielConvencionalItem = convertJsonObToModel(mielConvencional);
+                        mielConvencionalList.add(mielConvencionalItem);
+                    }
+
+                    ComprasMielListAdapter mielAdapter = new ComprasMielListAdapter(getContext(),mielConvencionalList);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                    recyclerView.setAdapter(mielAdapter);
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                progressBar.setVisibility(View.INVISIBLE);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                progressBar.setVisibility(View.INVISIBLE);
                 Toast.makeText(getContext(), "Compruba tu conexión a internet", Toast.LENGTH_SHORT).show();
             }
 
@@ -88,5 +108,41 @@ public class MielConvencionalFragment extends Fragment {
         request.setRetryPolicy(new DefaultRetryPolicy(5000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(request);
 
+    }
+
+    private ComprasMielModel convertJsonObToModel(JSONObject miel) {
+        ComprasMielModel comprasMielModel;
+
+        try {
+            String idMiel = miel.getString("id_miel");
+            String nombreProductor = miel.getString("nombre_productor");
+            String localidad = miel.getString("localidad");
+            String codigo = miel.getString("codigo");
+            String numeroFolio = miel.getString("numero_folio");
+            String humedad = miel.getString("humedad");
+            String pesoBruto = miel.getString("peso_bruto");
+            String pesoTara = miel.getString("peso_tara");
+            String precioCompra = miel.getString("precio_compra");
+            String totalKgs = miel.getString("total_kgs");
+            String totalPagar = miel.getString("total_pagar");
+            String numeroTambor = miel.getString("numero_tambor");
+            String mielEntrante = miel.getString("miel_entrante");
+            String mielFaltante = miel.getString("miel_faltante");
+            String idProductor = miel.getString("id_productor");
+            String idRegistro = miel.getString("id_registro");
+            String idUsuario = miel.getString("id_usuario");
+            String fechaRegistro = miel.getString("fecha_registro");
+            String tipoMiel = miel.getString("tipo_miel");
+
+            comprasMielModel = new ComprasMielModel(
+                    idMiel, nombreProductor, localidad, codigo, numeroFolio, humedad,
+                    pesoBruto, pesoTara, precioCompra, totalKgs, totalPagar, numeroTambor,
+                    mielEntrante, mielFaltante, idProductor, idRegistro, idUsuario, fechaRegistro, tipoMiel);
+            return comprasMielModel;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

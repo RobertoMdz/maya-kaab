@@ -15,43 +15,41 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.coopera.mayakaab.R;
-import com.coopera.mayakaab.models.MielConvencionalModel;
-import com.coopera.mayakaab.models.MielOrganicaModel;
+import com.coopera.mayakaab.models.ComprasMielModel;
 import com.coopera.mayakaab.views.AgregarMielConvencionalActivity;
-import com.coopera.mayakaab.views.AgregarMielOrganicaActivity;
 
 import java.util.ArrayList;
 
-public class MielOrganicaListAdapter extends RecyclerView.Adapter<MielOrganicaListAdapter.ViewHolder> {
+public class ComprasMielListAdapter extends RecyclerView.Adapter<ComprasMielListAdapter.ViewHolder>{
 
     Context mContext;
-    ArrayList<MielOrganicaModel> itemsList;
+    ArrayList<ComprasMielModel> listItems;
 
-    public MielOrganicaListAdapter(Context mContext, ArrayList<MielOrganicaModel> itemsList) {
+    public ComprasMielListAdapter(Context mContext, ArrayList<ComprasMielModel> listItems) {
         this.mContext = mContext;
-        this.itemsList = itemsList;
+        this.listItems = listItems;
     }
 
     @NonNull
     @Override
-    public MielOrganicaListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ComprasMielListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         LayoutInflater mInflater = LayoutInflater.from(mContext);
-        view = mInflater.inflate(R.layout.mielorganica_list_item,parent,false);
-        return new MielOrganicaListAdapter.ViewHolder(view);
+        view = mInflater.inflate(R.layout.mielconvencional_list_item,parent,false);
+        return new ComprasMielListAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MielOrganicaListAdapter.ViewHolder holder, int position) {
-        final MielOrganicaModel mielOrganica = itemsList.get(position);
+    public void onBindViewHolder(@NonNull ComprasMielListAdapter.ViewHolder holder, int position) {
+        final ComprasMielModel mielConvencional = listItems.get(position);
 
-        holder.fechaVenta.setText(mielOrganica.getFecha());
-        holder.vendedor.setText(mielOrganica.getNombre());
+        holder.fechaVenta.setText(mielConvencional.getFechaRegistro());
+        holder.vendedor.setText(mielConvencional.getNombreProductor());
 
-        holder.btnEditarMielOrganica.setOnClickListener(new View.OnClickListener() {
+        holder.btnEditarMielConvencional.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, AgregarMielOrganicaActivity.class);
+                Intent intent = new Intent(mContext, AgregarMielConvencionalActivity.class);
                 //intent.putExtra("update","1");
                 //intent.putExtra("id_arbol",productor.getId);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -60,7 +58,7 @@ public class MielOrganicaListAdapter extends RecyclerView.Adapter<MielOrganicaLi
             }
         });
 
-        holder.btnEliminarMielOrganica.setOnClickListener(new View.OnClickListener() {
+        holder.btnEliminarMielConvencional.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // mostrar un alert dialog personalizado //
@@ -83,7 +81,7 @@ public class MielOrganicaListAdapter extends RecyclerView.Adapter<MielOrganicaLi
                     public void onClick(View v) {
 
                         dialog.dismiss();
-                        itemsList.remove(holder.getLayoutPosition());
+                        listItems.remove(holder.getLayoutPosition());
                         notifyItemRemoved(holder.getLayoutPosition());
 
                     }
@@ -102,24 +100,23 @@ public class MielOrganicaListAdapter extends RecyclerView.Adapter<MielOrganicaLi
 
     }
 
-
     @Override
     public int getItemCount() {
-        return itemsList.size();
+        return listItems.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView fechaVenta;
         TextView vendedor;
-        ImageButton btnEditarMielOrganica;
-        ImageButton btnEliminarMielOrganica;
+        ImageButton btnEditarMielConvencional;
+        ImageButton btnEliminarMielConvencional;
 
         public ViewHolder (View itemView) {
             super(itemView);
-            fechaVenta    = itemView.findViewById(R.id.txt_fecha_venta_miel_organica);
-            vendedor = itemView.findViewById(R.id.txt_vendedor_miel_organica);
-            btnEditarMielOrganica   = itemView.findViewById(R.id.imgbtnEditarMielOrganica);
-            btnEliminarMielOrganica = itemView.findViewById(R.id.imgbtnEliminarMielOrganica);
+            fechaVenta    = itemView.findViewById(R.id.txt_fecha_venta_miel_convencional);
+            vendedor = itemView.findViewById(R.id.txt_vendedor_miel_convencional);
+            btnEditarMielConvencional   = itemView.findViewById(R.id.imgbtnEditarMielConvencional);
+            btnEliminarMielConvencional = itemView.findViewById(R.id.imgbtnEliminarMielConvencional);
         }
     }
 }

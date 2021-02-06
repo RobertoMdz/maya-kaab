@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -20,11 +21,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.coopera.mayakaab.R;
-import com.coopera.mayakaab.adapters.MielConvencionalListAdapter;
-import com.coopera.mayakaab.adapters.MielOrganicaListAdapter;
-import com.coopera.mayakaab.models.MielConvencionalModel;
-import com.coopera.mayakaab.models.MielOrganicaModel;
+import com.coopera.mayakaab.adapters.ComprasMielListAdapter;
+import com.coopera.mayakaab.models.ComprasMielModel;
+import com.coopera.mayakaab.models.Constants;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -36,7 +40,8 @@ public class MielOrganicaFragment extends Fragment {
 
     RecyclerView recyclerView;
     FloatingActionButton btnAgregar;
-    ArrayList<MielOrganicaModel> mielOrganicalList = new ArrayList<>();
+    ArrayList<ComprasMielModel> mielOrganicalList = new ArrayList<>();
+    ProgressBar progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,15 +51,7 @@ public class MielOrganicaFragment extends Fragment {
 
         recyclerView = vista.findViewById(R.id.recycler_miel_organica);
         btnAgregar = vista.findViewById(R.id.fltbtn_agregar_miel_organica);
-
-        for (int i = 0; i < 10; i++){
-            mielOrganicalList.add(new MielOrganicaModel("12/Diciembre/2020","0012","012", "22/Diciembre/2020","Juan Chan Chan","10%","1000","tara","pn","pu", "$100","20"));
-        }
-
-        MielOrganicaListAdapter mielAdapter = new MielOrganicaListAdapter(getContext(),mielOrganicalList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(mielAdapter);
-
+        progressBar = vista.findViewById(R.id.progressBarOrganica);
 
         btnAgregar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,18 +60,40 @@ public class MielOrganicaFragment extends Fragment {
                 startActivity(newIntent);
             }
         });
+
+        obtenerMielOrganica();
         return vista;
 
     }
 
     private void obtenerMielOrganica() {
-        String urlGetList = "";
+        progressBar.setVisibility(View.VISIBLE);
+        String urlGetList =  Constants.URL_BASE + "miel.php?action=tipo-miel&tm=1";
 
         StringRequest request = new StringRequest(Request.Method.GET, urlGetList, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
-                String respuesta = response;
+                try {
+                    JSONObject respuesta = new JSONObject(response);
+                    JSONArray mielOrganicaJsonList = respuesta.getJSONArray("miel-organica");
+
+                    for (int i = 0; i < mielOrganicaJsonList.length(); i++) {
+                        JSONObject mielOrganica = mielOrganicaJsonList.getJSONObject(i);
+
+                        ComprasMielModel mielOrganicaItem = convertJsonObToModel(mielOrganica);
+                        mielOrganicalList.add(mielOrganicaItem);
+                    }
+
+                    ComprasMielListAdapter mielAdapter = new ComprasMielListAdapter(getContext(),mielOrganicalList);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                    recyclerView.setAdapter(mielAdapter);
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                progressBar.setVisibility(View.INVISIBLE);
 
             }
         }, new Response.ErrorListener() {
@@ -89,5 +108,41 @@ public class MielOrganicaFragment extends Fragment {
         request.setRetryPolicy(new DefaultRetryPolicy(5000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(request);
 
+    }
+
+    private ComprasMielModel convertJsonObToModel(JSONObject miel) {
+        ComprasMielModel comprasMielModel;
+
+        try {
+            String idMiel = miel.getString("id_miel");
+            String nombreProductor = miel.getString("nombre_productor");
+            String localidad = miel.getString("localidad");
+            String codigo = miel.getString("codigo");
+            String numeroFolio = miel.getString("numero_folio");
+            String humedad = miel.getString("humedad");
+            String pesoBruto = miel.getString("peso_bruto");
+            String pesoTara = miel.getString("peso_tara");
+            String precioCompra = miel.getString("precio_compra");
+            String totalKgs = miel.getString("total_kgs");
+            String totalPagar = miel.getString("total_pagar");
+            String numeroTambor = miel.getString("numero_tambor");
+            String mielEntrante = miel.getString("miel_entrante");
+            String mielFaltante = miel.getString("miel_faltante");
+            String idProductor = miel.getString("id_productor");
+            String idRegistro = miel.getString("id_registro");
+            String idUsuario = miel.getString("id_usuario");
+            String fechaRegistro = miel.getString("fecha_registro");
+            String tipoMiel = miel.getString("tipo_miel");
+
+            comprasMielModel = new ComprasMielModel(
+                    idMiel, nombreProductor, localidad, codigo, numeroFolio, humedad,
+                    pesoBruto, pesoTara, precioCompra, totalKgs, totalPagar, numeroTambor,
+                    mielEntrante, mielFaltante, idProductor, idRegistro, idUsuario, fechaRegistro, tipoMiel);
+            return comprasMielModel;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

@@ -80,7 +80,7 @@ public class ProductoresActivity extends AppCompatActivity {
 
                                 productoresList.add(new ProductorModel(idProductor, nombreProductor, localidadProductor, telefonoProductor, referenciaProductor));
                             }
-                            progressBar.setVisibility(View.INVISIBLE);
+
 
                             ProductorListAdapter myadapter = new ProductorListAdapter(ProductoresActivity.this,productoresList);
                             recyclerView.setLayoutManager(new LinearLayoutManager(ProductoresActivity.this));
@@ -89,6 +89,7 @@ public class ProductoresActivity extends AppCompatActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        progressBar.setVisibility(View.INVISIBLE);
 
 
                     }
@@ -97,6 +98,7 @@ public class ProductoresActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                progressBar.setVisibility(View.INVISIBLE);
                 Toast.makeText(ProductoresActivity.this, "Comprueba tu conexión a internet", Toast.LENGTH_SHORT).show();
             }
 
