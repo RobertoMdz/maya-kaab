@@ -26,9 +26,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.coopera.mayakaab.R;
+import com.coopera.mayakaab.models.ComprasMielModel;
 import com.coopera.mayakaab.models.Constants;
 import com.coopera.mayakaab.models.ProductorModel;
 import com.coopera.mayakaab.models.TipoDeMielModel;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,6 +54,11 @@ public class AgregarMielOrganicaActivity extends AppCompatActivity {
     String idMiel;
     String precioMiel;
 
+    Boolean isUpdate = false;
+    ComprasMielModel compraMielModel;
+    Gson gson = new Gson();
+
+
     ArrayList<String> productoresNombresList = new ArrayList<String>();
     ArrayList<ProductorModel> productoresList = new ArrayList<ProductorModel>();
     ProductorModel productorSelected;
@@ -63,6 +70,7 @@ public class AgregarMielOrganicaActivity extends AppCompatActivity {
         setContentView(R.layout.formulario_agregar_venta_miel);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        isUpdate = getIntent().getBooleanExtra("isUpdate",false);
         SharedPreferences pref = getApplicationContext().getSharedPreferences("myPrefsLogin",MODE_PRIVATE);
         idUsuario = pref.getString("id","");
 
@@ -89,6 +97,13 @@ public class AgregarMielOrganicaActivity extends AppCompatActivity {
             }
         });
 
+        if(isUpdate) {
+            btnAgregarMiel.setText("Actualizar");
+            compraMielModel = gson.fromJson(getIntent().getStringExtra("compra"), ComprasMielModel.class);
+            setInitialFormState(compraMielModel);
+        }
+
+
         spinnerProductores.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -110,12 +125,55 @@ public class AgregarMielOrganicaActivity extends AppCompatActivity {
         edtxPesoBruto.addTextChangedListener(inputTextWatcher);
         edtxPesoTara.addTextChangedListener(inputTextWatcher);
         edxtTotalKgs.addTextChangedListener(totalKgsInputTextWatcher);
+        edtxPesoTara.addTextChangedListener(totalKgsTaraInputTextWatcher);
 
         obtenerProductores();
         obtenerTipoMiel();
-
-
     }
+
+    private TextWatcher totalKgsTaraInputTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            String pesoBruto = edtxPesoBruto.getText().toString().trim();
+            String pesoTara = edtxPesoTara.getText().toString().trim();
+
+            if(!pesoBruto.isEmpty() && !pesoTara.isEmpty()) {
+                double pBruto = Double.parseDouble(pesoBruto);
+                double pTara = Double.parseDouble(pesoTara);
+
+                if (pTara >= pBruto) {
+                    edtxPesoTara.setError("Tara no puede ser mayor o igual a peso bruto");
+                }
+
+            }
+        }
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    };
+
+    private void setInitialFormState(ComprasMielModel compraMiel) {
+        edtxCodigo.setText(compraMiel.getCodigo());
+        edtxFolio.setText(compraMiel.getNumeroFolio());
+        edtxHumedad.setText(compraMiel.getHumedad());
+
+        edtxPesoBruto.setText(compraMiel.getPesoBruto());
+        edtxPesoTara.setText(compraMiel.getPesoTara());
+        edtxPrecioCompra.setText(compraMiel.getPrecioCompra());
+        edxtTotalKgs.setText(compraMiel.getTotalKgs());
+
+        edxtTotalPagar.setText(compraMiel.getTotalPagar());
+        edxtNumeroTambor.setText(compraMiel.getNumeroTambor());
+        edxtMielEntrante.setText(compraMiel.getMielEntrante());
+        edxtMielFaltante.setText(compraMiel.getMielFaltante());
+
+        // Inicializar variables
+        precioMiel = compraMiel.getPrecioCompra();
+    }
+
 
     private TextWatcher inputTextWatcher = new TextWatcher() {
         @Override
@@ -182,9 +240,12 @@ public class AgregarMielOrganicaActivity extends AppCompatActivity {
 
                                 tiposDeMielModelList.add(new TipoDeMielModel(id, nombre, descripcion, precio, fechaRegistro));
                             }
-                            edtxPrecioCompra.setText(tiposDeMielModelList.get(0).getPrecio());
+
+                            if(!isUpdate) {
+                                edtxPrecioCompra.setText(tiposDeMielModelList.get(0).getPrecio());
+                                precioMiel = tiposDeMielModelList.get(0).getPrecio();
+                            }
                             idMiel = tiposDeMielModelList.get(0).getId();
-                            precioMiel = tiposDeMielModelList.get(0).getPrecio();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -232,6 +293,11 @@ public class AgregarMielOrganicaActivity extends AppCompatActivity {
                             ArrayAdapter<String> adapter = new ArrayAdapter<String>(AgregarMielOrganicaActivity.this, R.layout.spinner_custom, productoresNombresList);
                             spinnerProductores.setAdapter(adapter);
 
+                            if(isUpdate) {
+                                spinnerProductores.setSelection(adapter.getPosition(compraMielModel.getNombreProductor()));
+                            }
+
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -266,16 +332,34 @@ public class AgregarMielOrganicaActivity extends AppCompatActivity {
         mielEntrante = edxtMielEntrante.getText().toString().trim();
         mielFaltante = edxtMielFaltante.getText().toString().trim();
 
-        if ( productorSelected == null ||localidad.isEmpty() || codigo.isEmpty() || folio.isEmpty() || pesoBruto.isEmpty() || pesoTara.isEmpty() || precioCompra.isEmpty() || totalKgs.isEmpty() || totalPagar.isEmpty() || mielEntrante.isEmpty() || mielFaltante.isEmpty()) {
-            Toast.makeText(AgregarMielOrganicaActivity.this, "Todos los campos son requeridos", Toast.LENGTH_LONG).show();
-        } else {
-            guardarMielConvencional();
+        if (!pesoBruto.isEmpty() && !pesoTara.isEmpty()) {
+            double pBruto = Double.parseDouble(pesoBruto);
+            double pTara = Double.parseDouble(pesoTara);
+
+            if (pTara >= pBruto) {
+                Toast.makeText(AgregarMielOrganicaActivity.this, "Hay errores en el formulario que debes correjir", Toast.LENGTH_LONG).show();
+            } else {
+                if ( productorSelected == null ||localidad.isEmpty() || codigo.isEmpty() || folio.isEmpty() || pesoBruto.isEmpty() || pesoTara.isEmpty() || precioCompra.isEmpty() || totalKgs.isEmpty() || totalPagar.isEmpty() || mielEntrante.isEmpty() || mielFaltante.isEmpty()) {
+                    Toast.makeText(AgregarMielOrganicaActivity.this, "Los campos marcados con * son requeridos", Toast.LENGTH_LONG).show();
+                } else {
+                    guardarMielConvencional();
+                }
+            }
         }
+
+
     }
 
     private void guardarMielConvencional(){
         progressBar.setVisibility(View.VISIBLE);
-        String url = Constants.URL_BASE + "miel.php?action=save";
+        String url;
+
+        if(isUpdate) {
+            url = Constants.URL_BASE + "miel.php?action=update";
+        } else {
+            url = Constants.URL_BASE + "miel.php?action=save";
+        }
+
 
         StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
 
@@ -317,7 +401,9 @@ public class AgregarMielOrganicaActivity extends AppCompatActivity {
                 dataEnvio.put("id_productor", productorSelected.getId());
                 dataEnvio.put("id_registror", idMiel);
                 dataEnvio.put("id_usuario", idUsuario);
-
+                if(isUpdate) {
+                    dataEnvio.put("id_miel", compraMielModel.getIdMiel());
+                }
                 return dataEnvio;
             }
         };

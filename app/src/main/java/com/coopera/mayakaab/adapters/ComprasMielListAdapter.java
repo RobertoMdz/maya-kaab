@@ -25,6 +25,8 @@ import com.coopera.mayakaab.R;
 import com.coopera.mayakaab.models.ComprasMielModel;
 import com.coopera.mayakaab.models.Constants;
 import com.coopera.mayakaab.views.AgregarMielConvencionalActivity;
+import com.coopera.mayakaab.views.AgregarMielOrganicaActivity;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +36,7 @@ public class ComprasMielListAdapter extends RecyclerView.Adapter<ComprasMielList
 
     Context mContext;
     ArrayList<ComprasMielModel> listItems;
+    Gson gson = new Gson();
 
     public ComprasMielListAdapter(Context mContext, ArrayList<ComprasMielModel> listItems) {
         this.mContext = mContext;
@@ -59,9 +62,16 @@ public class ComprasMielListAdapter extends RecyclerView.Adapter<ComprasMielList
         holder.btnEditarMielConvencional.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, AgregarMielConvencionalActivity.class);
-                //intent.putExtra("update","1");
-                //intent.putExtra("id_arbol",productor.getId);
+                String jsonCompra = gson.toJson(compraMiel);
+                String tipoMiel = compraMiel.getIdRegistro();
+                Intent intent;
+                if (tipoMiel.equals("1")) {
+                    intent = new Intent(mContext, AgregarMielOrganicaActivity.class);
+                } else {
+                    intent = new Intent(mContext, AgregarMielConvencionalActivity.class);
+                }
+                intent.putExtra("isUpdate", true);
+                intent.putExtra("compra", jsonCompra);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(intent);
 
