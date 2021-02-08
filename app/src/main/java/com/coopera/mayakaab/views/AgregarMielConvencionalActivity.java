@@ -334,7 +334,7 @@ public class AgregarMielConvencionalActivity extends AppCompatActivity {
             double pTara = Double.parseDouble(pesoTara);
 
             if (pTara >= pBruto) {
-                Toast.makeText(AgregarMielConvencionalActivity.this, "Hay errores en el formulario que debes correjir", Toast.LENGTH_LONG).show();
+                Toast.makeText(AgregarMielConvencionalActivity.this, "Hay errores en el formulario que debes corregir", Toast.LENGTH_LONG).show();
             } else {
                 if ( productorSelected == null ||localidad.isEmpty() || codigo.isEmpty() || folio.isEmpty() || pesoBruto.isEmpty() || pesoTara.isEmpty() || precioCompra.isEmpty() || totalKgs.isEmpty() || totalPagar.isEmpty() || mielEntrante.isEmpty() || mielFaltante.isEmpty()) {
                     Toast.makeText(AgregarMielConvencionalActivity.this, "Los campos marcados con * son requeridos", Toast.LENGTH_LONG).show();

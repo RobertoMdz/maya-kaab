@@ -50,6 +50,7 @@ public class AgregarEnviosTamboresActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agregar_envios_tambores);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        isUpdate = getIntent().getBooleanExtra("isUpdate",false);
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("myPrefsLogin",MODE_PRIVATE);
         idUsuario = pref.getString("id","");
@@ -63,6 +64,7 @@ public class AgregarEnviosTamboresActivity extends AppCompatActivity {
         edtxKgsNetos = findViewById(R.id.edtx_kgs_netos);
         edtxNumeroTamborTix = findViewById(R.id.edtx_numero_tambortix);
         progressBar = findViewById(R.id.progressBarAddTambo);
+        btnAgregar = findViewById(R.id.btn_agregar_envio);
 
         if(isUpdate) {
             btnAgregar.setText("Actualizar");
@@ -70,12 +72,9 @@ public class AgregarEnviosTamboresActivity extends AppCompatActivity {
             setInitialFormState(envioTamboresModel);
         }
 
-
-        btnAgregar = findViewById(R.id.btn_agregar_envio);
         btnAgregar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
                 validarInputsForm();
             }
         });
@@ -156,7 +155,7 @@ public class AgregarEnviosTamboresActivity extends AppCompatActivity {
             double pTara = Double.parseDouble(tara);
 
             if (pTara >= pBruto) {
-                Toast.makeText(AgregarEnviosTamboresActivity.this, "Hay errores en el formulario que debes correjir", Toast.LENGTH_LONG).show();
+                Toast.makeText(AgregarEnviosTamboresActivity.this, "Hay errores en el formulario que debes corregir", Toast.LENGTH_LONG).show();
             } else {
                 if (cosecha.isEmpty() || codigo.isEmpty() || folio.isEmpty() || tambor.isEmpty() || kgsBrutos.isEmpty() || tara.isEmpty() || kgsNetos.isEmpty() || numTamborTix.isEmpty()) {
                     Toast.makeText(AgregarEnviosTamboresActivity.this, "Todos los campos marcados con * son requeridos", Toast.LENGTH_LONG).show();
@@ -168,13 +167,17 @@ public class AgregarEnviosTamboresActivity extends AppCompatActivity {
     }
 
     private void guardarEnvio(){
-        String url = Constants.URL_BASE + "envios.php?action=save";
+        String url;
+        if (isUpdate) {
+            url = Constants.URL_BASE + "envios.php?action=update";
+        } else {
+            url = Constants.URL_BASE + "envios.php?action=save";
+        }
 
         StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-
             @Override
             public void onResponse(String response) {
-                Toast.makeText(AgregarEnviosTamboresActivity.this, "Registro exitoso", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AgregarEnviosTamboresActivity.this,"Registro exitoso", Toast.LENGTH_SHORT).show();
                 onBackPressed();
             }
         }, new Response.ErrorListener() {
@@ -198,6 +201,9 @@ public class AgregarEnviosTamboresActivity extends AppCompatActivity {
                 dataEnvio.put("totalPesoKgs",kgsNetos);
                 dataEnvio.put("numTamboresTix",numTamborTix);
                 dataEnvio.put("id_usuario",idUsuario);
+                if (isUpdate) {
+                    dataEnvio.put("id_envio",envioTamboresModel.getIdEnvio());
+                }
                 return dataEnvio;
             }
         };

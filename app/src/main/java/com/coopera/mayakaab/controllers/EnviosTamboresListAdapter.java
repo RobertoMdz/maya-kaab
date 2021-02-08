@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.coopera.mayakaab.R;
 import com.coopera.mayakaab.models.EnvioTamboresModel;
 import com.coopera.mayakaab.views.AgregarEnviosTamboresActivity;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -24,6 +25,7 @@ public class EnviosTamboresListAdapter extends RecyclerView.Adapter<EnviosTambor
 
     Context mContext;
     ArrayList<EnvioTamboresModel> itemsList;
+    Gson gson =  new Gson();
 
     public EnviosTamboresListAdapter(Context context, ArrayList<EnvioTamboresModel> itemsList) {
         this.mContext = context;
@@ -41,21 +43,21 @@ public class EnviosTamboresListAdapter extends RecyclerView.Adapter<EnviosTambor
 
     @Override
     public void onBindViewHolder(@NonNull EnviosTamboresListAdapter.ViewHolder holder, int position) {
-        final EnvioTamboresModel enviosTambores = itemsList.get(position);
+        final EnvioTamboresModel envioTambor = itemsList.get(position);
 
-        holder.emision.setText("Emision: " + enviosTambores.getFechaRegisro());
-        holder.codigo.setText("Codigo: " + enviosTambores.getCodigo());
-        holder.folio.setText("Folio: " + enviosTambores.getNumeroFolio());
+        holder.emision.setText("Emision: " + envioTambor.getFechaRegisro());
+        holder.codigo.setText("Codigo: " + envioTambor.getCodigo());
+        holder.folio.setText("Folio: " + envioTambor.getNumeroFolio());
 
         holder.btnEditarMielConvencional.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String envioObj = gson.toJson(envioTambor);
                 Intent intent = new Intent(mContext, AgregarEnviosTamboresActivity.class);
-                //intent.putExtra("update","1");
-                //intent.putExtra("id_arbol",productor.getId);
+                intent.putExtra("isUpdate",true);
+                intent.putExtra("envio",envioObj);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(intent);
-
             }
         });
 
