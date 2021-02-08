@@ -413,10 +413,6 @@ public class AgregarMielOrganicaActivity extends AppCompatActivity {
         requestQueue.add(request);
     }
 
-
-
-
-
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();

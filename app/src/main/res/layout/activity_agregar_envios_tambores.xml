@@ -16,6 +16,7 @@
             android:layout_margin="15dp"
             android:gravity="center_horizontal"
             android:orientation="vertical">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -32,78 +33,255 @@
                 android:layout_marginBottom="30dp"
                 android:text="Concentrado de Miel Orgánica"/>
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:text="Numero de Cosecha"/>
-            <EditText
-                android:id="@+id/edtx_numero_cosecha"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:text="Código"/>
-            <EditText
-                android:id="@+id/edtx_codigo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:text="Numero de folio"/>
-            <EditText
-                android:id="@+id/edtx_numero_folio"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:text="Numero de tambor subcentro"/>
-            <EditText
-                android:id="@+id/edtx_numero_tambor"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <TextView
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="9dp"
+                    android:layout_height="9dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/dot_required"
+                    android:layout_marginBottom="20dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    app:hintTextAppearance="@style/AppTheme.FloatingLabel">
+
+                    <EditText
+                        android:id="@+id/edtx_numero_cosecha"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="20dp"
+                        android:textColor="@color/black"
+                        android:hint="Número de cosecha"
+                        android:inputType="number"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:text="Kgs. bruto"/>
-            <EditText
-                android:id="@+id/edtx_kgs_bruto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <TextView
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="9dp"
+                    android:layout_height="9dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/dot_required"
+                    android:layout_marginBottom="20dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    app:hintTextAppearance="@style/AppTheme.FloatingLabel">
+
+                    <EditText
+                        android:id="@+id/edtx_codigo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="20dp"
+                        android:textColor="@color/black"
+                        android:hint="Código"
+                        android:inputType="text"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:text="Tara"/>
-            <EditText
-                android:id="@+id/edtx_tara"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <TextView
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="9dp"
+                    android:layout_height="9dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/dot_required"
+                    android:layout_marginBottom="20dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    app:hintTextAppearance="@style/AppTheme.FloatingLabel">
+
+                    <EditText
+                        android:id="@+id/edtx_numero_folio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="20dp"
+                        android:textColor="@color/black"
+                        android:hint="Número de folio"
+                        android:inputType="text"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:text="Kgs. netos"/>
-            <EditText
-                android:id="@+id/edtx_kgs_netos"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <TextView
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="9dp"
+                    android:layout_height="9dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/dot_required"
+                    android:layout_marginBottom="20dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    app:hintTextAppearance="@style/AppTheme.FloatingLabel">
+
+                    <EditText
+                        android:id="@+id/edtx_numero_tambor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="20dp"
+                        android:textColor="@color/black"
+                        android:hint="Número de tambo"
+                        android:inputType="number"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:text="Numero de tambor TIX"/>
-            <EditText
-                android:id="@+id/edtx_numero_tambortix"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="9dp"
+                    android:layout_height="9dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/dot_required"
+                    android:layout_marginBottom="20dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    app:hintTextAppearance="@style/AppTheme.FloatingLabel">
+
+                    <EditText
+                        android:id="@+id/edtx_kgs_bruto"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="20dp"
+                        android:textColor="@color/black"
+                        android:hint="Kgs. brutos"
+                        android:inputType="numberDecimal"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="9dp"
+                    android:layout_height="9dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/dot_required"
+                    android:layout_marginBottom="20dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    app:hintTextAppearance="@style/AppTheme.FloatingLabel">
+
+                    <EditText
+                        android:id="@+id/edtx_tara"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="20dp"
+                        android:textColor="@color/black"
+                        android:hint="Tara"
+                        android:inputType="numberDecimal"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="9dp"
+                    android:layout_height="9dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/dot_required"
+                    android:layout_marginBottom="20dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:enabled="false"
+                    app:hintTextAppearance="@style/AppTheme.FloatingLabel">
+
+                    <EditText
+                        android:id="@+id/edtx_kgs_netos"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="20dp"
+                        android:enabled="false"
+                        android:textColor="@color/black"
+                        android:hint="Kgs. netos"
+                        android:inputType="numberDecimal"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="9dp"
+                    android:layout_height="9dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/dot_required"
+                    android:layout_marginBottom="20dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    app:hintTextAppearance="@style/AppTheme.FloatingLabel">
+
+                    <EditText
+                        android:id="@+id/edtx_numero_tambortix"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="20dp"
+                        android:textColor="@color/black"
+                        android:hint="Número de tambo TIX"
+                        android:inputType="number"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
 
             <Button
                 android:id="@+id/btn_agregar_envio"
@@ -115,5 +293,12 @@
 
 
     </androidx.core.widget.NestedScrollView>
+
+    <ProgressBar
+        android:id="@+id/progressBarAddTambo"
+        android:visibility="invisible"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </RelativeLayout>

@@ -1,4 +1,4 @@
-package com.coopera.mayakaab.adapters;
+package com.coopera.mayakaab.controllers;
 
 import android.content.Context;
 import android.view.LayoutInflater;

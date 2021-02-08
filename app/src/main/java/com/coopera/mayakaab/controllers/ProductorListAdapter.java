@@ -1,4 +1,4 @@
-package com.coopera.mayakaab.adapters;
+package com.coopera.mayakaab.controllers;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,63 +22,57 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.coopera.mayakaab.R;
-import com.coopera.mayakaab.models.ComprasMielModel;
 import com.coopera.mayakaab.models.Constants;
-import com.coopera.mayakaab.views.AgregarMielConvencionalActivity;
-import com.coopera.mayakaab.views.AgregarMielOrganicaActivity;
+import com.coopera.mayakaab.models.ProductorModel;
+import com.coopera.mayakaab.views.AgregarProductorActivity;
 import com.google.gson.Gson;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ComprasMielListAdapter extends RecyclerView.Adapter<ComprasMielListAdapter.ViewHolder>{
-
-    Context mContext;
-    ArrayList<ComprasMielModel> listItems;
+public class ProductorListAdapter extends RecyclerView.Adapter<ProductorListAdapter.ViewHolder> implements Serializable {
+    private Context mContext;
+    private ArrayList<ProductorModel> mData;
     Gson gson = new Gson();
 
-    public ComprasMielListAdapter(Context mContext, ArrayList<ComprasMielModel> listItems) {
+    public ProductorListAdapter(Context mContext, ArrayList<ProductorModel> mData) {
         this.mContext = mContext;
-        this.listItems = listItems;
+        this.mData = mData;
     }
 
     @NonNull
     @Override
-    public ComprasMielListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ProductorListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         LayoutInflater mInflater = LayoutInflater.from(mContext);
-        view = mInflater.inflate(R.layout.mielconvencional_list_item,parent,false);
-        return new ComprasMielListAdapter.ViewHolder(view);
+        view = mInflater.inflate(R.layout.productores_list_item,parent,false);
+        return new ProductorListAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ComprasMielListAdapter.ViewHolder holder, int position) {
-        final ComprasMielModel compraMiel = listItems.get(position);
+    public void onBindViewHolder(@NonNull ProductorListAdapter.ViewHolder holder, int position) {
+        final ProductorModel productor = mData.get(position);
 
-        holder.fechaVenta.setText(compraMiel.getFechaRegistro());
-        holder.vendedor.setText(compraMiel.getNombreProductor());
+        holder.nombre.setText(productor.getNombre());
+        holder.comunidad.setText(productor.getComunidad());
 
-        holder.btnEditarMielConvencional.setOnClickListener(new View.OnClickListener() {
+        holder.btnEditarProductor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String jsonCompra = gson.toJson(compraMiel);
-                String tipoMiel = compraMiel.getIdRegistro();
-                Intent intent;
-                if (tipoMiel.equals("1")) {
-                    intent = new Intent(mContext, AgregarMielOrganicaActivity.class);
-                } else {
-                    intent = new Intent(mContext, AgregarMielConvencionalActivity.class);
-                }
+                String jsonProductor = gson.toJson(productor);
+
+                Intent intent = new Intent(mContext, AgregarProductorActivity.class);
                 intent.putExtra("isUpdate", true);
-                intent.putExtra("compra", jsonCompra);
+                intent.putExtra("productor", jsonProductor);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(intent);
 
             }
         });
 
-        holder.btnEliminarMielConvencional.setOnClickListener(new View.OnClickListener() {
+        holder.btnEliminarProductor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // mostrar un alert dialog personalizado //
@@ -100,7 +94,7 @@ public class ComprasMielListAdapter extends RecyclerView.Adapter<ComprasMielList
                     @Override
                     public void onClick(View v) {
 
-                        final String url = Constants.URL_BASE+"miel.php?action=delete";
+                        final String url = Constants.URL_BASE+"productores.php?action=delete";
 
                         StringRequest putRequest = new StringRequest(Request.Method.POST, url,
                                 new Response.Listener<String>()
@@ -108,7 +102,7 @@ public class ComprasMielListAdapter extends RecyclerView.Adapter<ComprasMielList
                                     @Override
                                     public void onResponse(String response) {
                                         dialog.dismiss();
-                                        listItems.remove(holder.getLayoutPosition());
+                                        mData.remove(holder.getLayoutPosition());
                                         notifyItemRemoved(holder.getLayoutPosition());
                                     }
 
@@ -128,7 +122,7 @@ public class ComprasMielListAdapter extends RecyclerView.Adapter<ComprasMielList
                             protected Map<String, String> getParams() throws AuthFailureError
                             {
                                 Map<String, String>  params = new HashMap<String, String>();
-                                params.put("id_miel_eliminar",compraMiel.getIdMiel());
+                                params.put("id_productor_eliminar",productor.getId());
                                 return params;
                             }
 
@@ -140,7 +134,6 @@ public class ComprasMielListAdapter extends RecyclerView.Adapter<ComprasMielList
                 btn_cancelar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
                         dialog.dismiss();
                     }
                 });
@@ -152,21 +145,22 @@ public class ComprasMielListAdapter extends RecyclerView.Adapter<ComprasMielList
 
     @Override
     public int getItemCount() {
-        return listItems.size();
+        return mData.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView fechaVenta;
-        TextView vendedor;
-        ImageButton btnEditarMielConvencional;
-        ImageButton btnEliminarMielConvencional;
+        TextView nombre;
+        TextView comunidad;
+        ImageButton btnEditarProductor;
+        ImageButton btnEliminarProductor;
 
         public ViewHolder (View itemView) {
             super(itemView);
-            fechaVenta    = itemView.findViewById(R.id.txt_fecha_venta_miel_convencional);
-            vendedor = itemView.findViewById(R.id.txt_vendedor_miel_convencional);
-            btnEditarMielConvencional   = itemView.findViewById(R.id.imgbtnEditarMielConvencional);
-            btnEliminarMielConvencional = itemView.findViewById(R.id.imgbtnEliminarMielConvencional);
+            nombre    = itemView.findViewById(R.id.nombre_productor);
+            comunidad = itemView.findViewById(R.id.comunidad_productor);
+            btnEditarProductor   = itemView.findViewById(R.id.imgbtnEditarProductor);
+            btnEliminarProductor = itemView.findViewById(R.id.imgbtnEliminarProductor);
         }
     }
+
 }

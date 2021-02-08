@@ -2,6 +2,7 @@ package com.coopera.mayakaab.models;
 
 public class EnvioTamboresModel {
 
+    String idEnvio;
     String numCosecha;
     String codigo;
     String numeroFolio;
@@ -9,9 +10,12 @@ public class EnvioTamboresModel {
     String kgsBruto;
     String tara;
     String kgsNeto;
-    String numTambor;
+    String numTamborTix;
+    String idUsuario;
+    String fechaRegisro;
 
-    public EnvioTamboresModel(String numCosecha, String codigo, String numeroFolio, String numeroTamborSubcentro, String kgsBruto, String tara, String kgsNeto, String numTambor) {
+    public EnvioTamboresModel(String idEnvio, String numCosecha, String codigo, String numeroFolio, String numeroTamborSubcentro, String kgsBruto, String tara, String kgsNeto, String numTamborTix, String idUsuario, String fechaRegisro) {
+        this.idEnvio = idEnvio;
         this.numCosecha = numCosecha;
         this.codigo = codigo;
         this.numeroFolio = numeroFolio;
@@ -19,7 +23,17 @@ public class EnvioTamboresModel {
         this.kgsBruto = kgsBruto;
         this.tara = tara;
         this.kgsNeto = kgsNeto;
-        this.numTambor = numTambor;
+        this.numTamborTix = numTamborTix;
+        this.idUsuario = idUsuario;
+        this.fechaRegisro = fechaRegisro;
+    }
+
+    public String getIdEnvio() {
+        return idEnvio;
+    }
+
+    public void setIdEnvio(String idEnvio) {
+        this.idEnvio = idEnvio;
     }
 
     public String getNumCosecha() {
@@ -78,11 +92,27 @@ public class EnvioTamboresModel {
         this.kgsNeto = kgsNeto;
     }
 
-    public String getNumTambor() {
-        return numTambor;
+    public String getNumTamborTix() {
+        return numTamborTix;
     }
 
-    public void setNumTambor(String numTambor) {
-        this.numTambor = numTambor;
+    public void setNumTamborTix(String numTamborTix) {
+        this.numTamborTix = numTamborTix;
+    }
+
+    public String getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(String idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
+    public String getFechaRegisro() {
+        return fechaRegisro;
+    }
+
+    public void setFechaRegisro(String fechaRegisro) {
+        this.fechaRegisro = fechaRegisro;
     }
 }

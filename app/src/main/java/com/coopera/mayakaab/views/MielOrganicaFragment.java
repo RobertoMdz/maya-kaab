@@ -21,7 +21,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.coopera.mayakaab.R;
-import com.coopera.mayakaab.adapters.ComprasMielListAdapter;
+import com.coopera.mayakaab.controllers.ComprasMielListAdapter;
 import com.coopera.mayakaab.models.ComprasMielModel;
 import com.coopera.mayakaab.models.Constants;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;

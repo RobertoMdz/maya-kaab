@@ -7,7 +7,7 @@ import androidx.viewpager.widget.ViewPager;
 import android.os.Bundle;
 
 import com.coopera.mayakaab.R;
-import com.coopera.mayakaab.adapters.MielPagerAdapter;
+import com.coopera.mayakaab.controllers.MielPagerAdapter;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 

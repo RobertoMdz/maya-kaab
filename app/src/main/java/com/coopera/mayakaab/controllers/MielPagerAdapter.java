@@ -1,4 +1,4 @@
-package com.coopera.mayakaab.adapters;
+package com.coopera.mayakaab.controllers;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;

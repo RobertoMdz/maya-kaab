@@ -10,15 +10,13 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.coopera.mayakaab.R;
-import com.coopera.mayakaab.adapters.ProductorListAdapter;
+import com.coopera.mayakaab.controllers.ProductorListAdapter;
 import com.coopera.mayakaab.models.Constants;
 import com.coopera.mayakaab.models.ProductorModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;

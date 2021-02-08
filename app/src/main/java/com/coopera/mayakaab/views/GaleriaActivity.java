@@ -6,21 +6,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Context;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -29,13 +29,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.coopera.mayakaab.R;
-import com.coopera.mayakaab.adapters.GaleriaListAdapter;
-import com.coopera.mayakaab.adapters.ProductorListAdapter;
+import com.coopera.mayakaab.controllers.GaleriaListAdapter;
 import com.coopera.mayakaab.models.GaleriaImagenModel;
-import com.coopera.mayakaab.models.ProductorModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GaleriaActivity extends AppCompatActivity {
 
@@ -102,11 +103,53 @@ public class GaleriaActivity extends AppCompatActivity {
         if (requestCode == 102) {
             if (data != null) {
                 Bitmap image = (Bitmap) data.getExtras().get("data");
-                // setImagetoImageView
+                String imagen = converImageBitmapToString(image);
+                uploadImageToServer(imagen);
+            }
+        }
+    }
+
+    private void uploadImageToServer(String imagen) {
+        final ProgressDialog dialog = ProgressDialog.show(this, "Guardando imagen...", "Espere porfavor");
+        String url = "";
+
+        StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                dialog.dismiss();
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                dialog.dismiss();
+                Toast.makeText(GaleriaActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
+                Log.d("ERROR",error.toString());
             }
 
+        }) {
+            @Override
+            protected Map<String,String> getParams() throws AuthFailureError {
 
-        }
+                Map <String,String> dataEnvio= new HashMap<>();
+
+                dataEnvio.put("image", imagen);
+                return dataEnvio;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        request.setRetryPolicy(new DefaultRetryPolicy(15000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        requestQueue.add(request);
+    }
+
+    private String converImageBitmapToString(Bitmap image) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imageBytes = baos.toByteArray();
+        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+        return encodedImage;
     }
 
     private void obtenerImagenes() {
@@ -131,7 +174,6 @@ public class GaleriaActivity extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         request.setRetryPolicy(new DefaultRetryPolicy(5000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(request);
-
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.coopera.mayakaab.adapters;
+package com.coopera.mayakaab.controllers;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.coopera.mayakaab.R;
 import com.coopera.mayakaab.models.EnvioTamboresModel;
 import com.coopera.mayakaab.views.AgregarEnviosTamboresActivity;
-import com.coopera.mayakaab.views.AgregarMielOrganicaActivity;
 
 import java.util.ArrayList;
 
@@ -44,7 +43,7 @@ public class EnviosTamboresListAdapter extends RecyclerView.Adapter<EnviosTambor
     public void onBindViewHolder(@NonNull EnviosTamboresListAdapter.ViewHolder holder, int position) {
         final EnvioTamboresModel enviosTambores = itemsList.get(position);
 
-        holder.emision.setText("Emision: " + enviosTambores.getNumCosecha());
+        holder.emision.setText("Emision: " + enviosTambores.getFechaRegisro());
         holder.codigo.setText("Codigo: " + enviosTambores.getCodigo());
         holder.folio.setText("Folio: " + enviosTambores.getNumeroFolio());
 
