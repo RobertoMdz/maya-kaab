@@ -95,7 +95,6 @@ public class ProductorListAdapter extends RecyclerView.Adapter<ProductorListAdap
                     public void onClick(View v) {
 
                         final String url = Constants.URL_BASE+"productores.php?action=delete";
-
                         StringRequest putRequest = new StringRequest(Request.Method.POST, url,
                                 new Response.Listener<String>()
                                 {
