@@ -21,4 +21,11 @@
         android:layout_margin="15dp"
         android:src="@drawable/ic_baseline_add_24"/>
 
+    <ProgressBar
+        android:id="@+id/progressBarGaleria"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:layout_centerInParent="true"/>
+
 </RelativeLayout>

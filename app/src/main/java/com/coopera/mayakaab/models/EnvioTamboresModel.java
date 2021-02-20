@@ -1,5 +1,7 @@
 package com.coopera.mayakaab.models;
 
+import java.util.ArrayList;
+
 public class EnvioTamboresModel {
 
     String idEnvio;

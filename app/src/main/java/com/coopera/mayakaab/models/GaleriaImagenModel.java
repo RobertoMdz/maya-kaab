@@ -4,9 +4,9 @@ import android.graphics.drawable.Drawable;
 
 public class GaleriaImagenModel {
     String id;
-    int imagen;
+    String imagen;
 
-    public GaleriaImagenModel(String id, int imagen) {
+    public GaleriaImagenModel(String id, String imagen) {
         this.id = id;
         this.imagen = imagen;
     }
@@ -19,11 +19,11 @@ public class GaleriaImagenModel {
         this.id = id;
     }
 
-    public int getImagen() {
+    public String getImagen() {
         return imagen;
     }
 
-    public void setImagen(int imagen) {
+    public void setImagen(String imagen) {
         this.imagen = imagen;
     }
 }
